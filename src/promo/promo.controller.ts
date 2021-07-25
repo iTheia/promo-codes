@@ -1,12 +1,43 @@
-import { Controller, Get } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
+import { createDto, updateDto, validateDto } from './dto';
 import { PromoService } from './promo.service';
 
 @Controller()
 export class PromoController {
-  constructor(private readonly appService: PromoService) {}
+  constructor(private readonly promoService: PromoService) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('')
+  async getCodes(@Param('page') page: string, @Param('limit') limit: string) {
+    return await this.promoService.getCodes(parseInt(page), parseInt(limit));
+  }
+  @Get('/:code')
+  async getCode(@Param('code') code: string) {
+    return await this.promoService.getCode(code);
+  }
+
+  @Post('')
+  async createCode(@Body() dto: createDto) {
+    return await this.promoService.createCode(dto);
+  }
+
+  @Post('/validate')
+  async validate(@Body() dto: validateDto) {
+    return await this.promoService.validateCode(dto);
+  }
+  @Delete('/:code')
+  async deleteCode(@Param('code') code: string) {
+    return await this.promoService.deleteCode(code);
+  }
+  @Patch('/:code')
+  async updateCode(@Param('code') code: string, @Body() dto: updateDto) {
+    return await this.promoService.updateCode(code, dto);
   }
 }

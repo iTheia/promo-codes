@@ -4,7 +4,8 @@ const { env } = process;
 
 export const prod: IConf = {
   db: {
-    mongo: env.MONGO || '',
+    uri: env.MONGO || '',
+    dbName: 'promos',
   },
   port: parseInt(env.PORT) || 3000,
 };
