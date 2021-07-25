@@ -19,7 +19,7 @@ export class PromoService {
           .limit(limit)
           .skip(page * limit),
         next: { page: page + 1, limit },
-        prev: { page: page - 1, limit },
+        prev: page - 1 >= 0 ? { page: page - 1, limit } : null,
       };
     } catch (error) {
       throw new StandardError('Error al cargar los codigos');
@@ -28,9 +28,15 @@ export class PromoService {
 
   async getCode(code: string) {
     try {
-      return await this.promoModel.findOne({ code });
+      const promo = await this.promoModel.findOne({ code });
+      if (!promo) {
+        throw new Error('Sin codigo');
+      }
+      return promo;
     } catch (error) {
-      throw new StandardError('Error al cargar el codigo');
+      throw new StandardError(
+        error.message ? error.message : JSON.stringify(error),
+      );
     }
   }
 
@@ -44,7 +50,8 @@ export class PromoService {
 
   async deleteCode(code: string) {
     try {
-      return await this.promoModel.deleteOne({ code });
+      await this.promoModel.deleteOne({ code });
+      return { okey: true };
     } catch (error) {
       throw new StandardError('Error al borrar el codigo');
     }
@@ -52,7 +59,8 @@ export class PromoService {
 
   async updateCode(code: string, dto: updateDto) {
     try {
-      return await this.promoModel.updateOne({ code }, dto);
+      await this.promoModel.updateOne({ code }, dto);
+      return { okey: true };
     } catch (error) {
       throw new StandardError('Error al actualizar el codigo');
     }

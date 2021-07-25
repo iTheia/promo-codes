@@ -15,7 +15,10 @@ export class PromoController {
   constructor(private readonly promoService: PromoService) {}
 
   @Get('')
-  async getCodes(@Param('page') page: string, @Param('limit') limit: string) {
+  async getCodes(
+    @Param('page') page: string = '0',
+    @Param('limit') limit: string = '10',
+  ) {
     return await this.promoService.getCodes(parseInt(page), parseInt(limit));
   }
   @Get('/:code')

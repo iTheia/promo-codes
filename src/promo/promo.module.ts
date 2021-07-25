@@ -8,7 +8,10 @@ import { PromoService } from './promo.service';
 @Module({
   imports: [
     MongooseModule.forRootAsync({
-      useFactory: (config: ConfigService) => config.get('db'),
+      useFactory: (config: ConfigService) => ({
+        ...config.get('db'),
+        useCreateIndex: true,
+      }),
       inject: [ConfigService],
     }),
     MongooseModule.forFeature([{ name: 'promos', schema: PromoSchema }]),
