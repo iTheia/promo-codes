@@ -7,10 +7,12 @@ import {
   Patch,
   Post,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { createDto, updateDto, validateDto } from './dto';
 import { PromoService } from './promo.service';
 
-@Controller()
+@ApiTags('Promo')
+@Controller('promos')
 export class PromoController {
   constructor(private readonly promoService: PromoService) {}
 
